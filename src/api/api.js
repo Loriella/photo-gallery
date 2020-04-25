@@ -9,6 +9,12 @@ const fetchApi = (url) => {
         throw response;
       }
     })
+    .catch(response => {
+      return response.json()
+        .then(error => {
+          throw error;
+        });
+    });
 };
 
 export default class CallApi {
