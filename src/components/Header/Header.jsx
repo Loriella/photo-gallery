@@ -1,11 +1,11 @@
 import React from "react";
 import {Link, useLocation} from "react-router-dom";
+import {useRouteMatch} from "react-router";
 
-function Header() {
+const Header = () => {
   const {pathname} = useLocation();
-  const path = pathname.split("/").filter(a => a);
-  const hasAlbums = path[path.length - 2] === "albums";
-  const newPath = path.slice(0, -1).join("/");
+  const isAlbumPage = useRouteMatch("/users/:userId/albums/:albumId");
+  const userId = pathname.split("/")[2];
 
   return (
     <nav className="navbar navbar-dark bg-success" aria-label="breadcrumb">
@@ -15,15 +15,15 @@ function Header() {
             <Link className="text-white" to="/">Пользователи</Link>
           </li>
           {
-            hasAlbums &&
+            isAlbumPage &&
             <li className="breadcrumb-item">
-              <Link className="text-white" to={`/${newPath}`}>Альбомы</Link>
+              <Link className="text-white" to={`/users/${userId}/albums`}>Альбомы</Link>
             </li>
           }
         </ol>
       </div>
     </nav>
   );
-}
+};
 
 export default Header;

@@ -9,6 +9,9 @@ const fetchApi = (url) => {
         throw response;
       }
     })
+    .catch(error => {
+      return error;
+    })
 };
 
 export default class CallApi {
@@ -24,9 +27,9 @@ export default class CallApi {
     )
   };
 
-  static getPhotosByAlbumId(AlbumId) {
+  static getPhotosByAlbumId(albumId) {
     return fetchApi(
-      `/albums/${AlbumId}/photos`
+      `/albums/${albumId}/photos`
     )
   };
 };

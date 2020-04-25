@@ -20,3 +20,7 @@ code {
   background-size: cover;
   cursor: pointer;
 }
+
+.modal-block {
+  display: block !important;
+}

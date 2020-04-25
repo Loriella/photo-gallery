@@ -1,20 +1,20 @@
 import React, {useEffect} from "react";
-import User from "./User";
-import Loader from "../Loader/Loader";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchUsers} from "../../redux/actions";
+import User from "./User";
+import Loader from "../Loader/Loader";
 
 const UsersList = () => {
 
   const users = useSelector(state => state.users);
+  const loading = useSelector(state => state.isLoadingUsers);
+  
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (!users.length) {
-      dispatch(fetchUsers())
-    }
-  }, [dispatch, users.length]);
 
-  const loading = useSelector(state => state.usersLoading);
+  useEffect(() => {
+      dispatch(fetchUsers())
+  }, [dispatch]);
+
 
   return (
     <div className="row">

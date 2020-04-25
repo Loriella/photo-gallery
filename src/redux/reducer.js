@@ -4,9 +4,9 @@ const initialState = {
   users: [],
   albums: [],
   photos: {},
-  usersLoading: false,
-  albumsLoading: false,
-  photosLoading: false
+  isLoadingUsers: false,
+  isLoadingAlbums: false,
+  isLoadingPhotos: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -15,33 +15,33 @@ const reducer = (state = initialState, action) => {
     case types.FETCH_USERS:
       return {
         ...state,
-        usersLoading: true
+        isLoadingUsers: true
       };
 
     case types.FETCH_ALBUMS_BY_USER_ID:
       return {
         ...state,
-        albumsLoading: true
+        isLoadingAlbums: true
       };
 
     case types.FETCH_PHOTO_BY_ALBUM_ID:
       return {
         ...state,
-        photosLoading: true
+        isLoadingPhotos: true
       };
 
     case types.FETCH_USERS_SUCCESS:
       return {
         ...state,
         users: action.payload,
-        usersLoading: false
+        isLoadingUsers: false
       };
 
     case types.FETCH_ALBUMS_BY_USER_ID_SUCCESS:
       return {
         ...state,
         albums: action.payload,
-        albumsLoading: false
+        isLoadingAlbums: false
       };
 
     case types.FETCH_PHOTO_BY_ALBUM_ID_SUCCESS:
@@ -51,27 +51,27 @@ const reducer = (state = initialState, action) => {
           ...state.photos,
           [action.payload.albumId]: action.payload.photos
         },
-        photosLoading: false
+        isLoadingPhotos: false
       };
 
     case types.FETCH_USERS_ERROR:
       return {
         ...state,
         users: [],
-        usersLoading: false
+        isLoadingUsers: false
       };
 
     case types.FETCH_ALBUMS_BY_USER_ID_ERROR:
       return {
         ...state,
         albums: [],
-        albumsLoading: false
+        isLoadingAlbums: false
       };
 
     case types.FETCH_PHOTO_BY_ALBUM_ID_ERROR:
       return {
         ...state,
-        photosLoading: false
+        isLoadingPhotos: false
       };
 
     default :

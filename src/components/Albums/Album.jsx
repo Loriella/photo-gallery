@@ -4,20 +4,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchPhotosByAlbumId} from "../../redux/actions";
 
 const Album = ({album}) => {
-  const id = album.id;
-  const photos = useSelector(state => state.photos[id]);
+  const albumId = album.id;
+  const albumPhotos = useSelector(state => state.photos[albumId] ?? []);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchPhotosByAlbumId(id))
-  }, [id, dispatch]);
+    dispatch(fetchPhotosByAlbumId(albumId))
+  }, [albumId, dispatch]);
 
-  const cover = photos?.[0].thumbnailUrl ?? "";
-  const albumSize = photos?.length ?? 0;
+  const defaultAlbumPhoto = albumPhotos[0];
+  const albumCover = defaultAlbumPhoto?.thumbnailUrl ?? "";
+  const albumSize = albumPhotos.length ?? 0;
 
   return (
-    <div className="card border-0 bg-secondary shadow card-picture" style={{backgroundImage: `url(${cover})`}}>
-      <Link to={`/users/${album.userId}/albums/${id}`}>
+    <div className="card border-0 bg-secondary shadow card-picture" style={{backgroundImage: `url(${albumCover})`}}>
+      <Link to={`/users/${album.userId}/albums/${albumId}`}>
         <div className="card-img-overlay">
           <small className="card-text text-center text-white">В альбоме {albumSize} фото</small>
           <h5 className="card-title text-uppercase text-white">{album.title}</h5>

@@ -1,26 +1,60 @@
 import React, {useEffect, useState} from "react";
-import Photo from "./Photo";
-import Loader from "../Loader/Loader";
-import ModalPhoto from "../Modal/ModalPhoto";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router";
 import {fetchPhotosByAlbumId} from "../../redux/actions";
+import Photo from "./Photo";
+import Loader from "../Loader/Loader";
+import ModalPhoto from "../Modal/ModalPhoto";
+
+const useModalPhoto = (photos) => {
+  const [show, setShow] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(null);
+
+  const open = photoIndex => {
+    setCurrentPhotoIndex(photoIndex);
+    setShow(true);
+  };
+
+  const close = () => {
+    setCurrentPhotoIndex(null);
+    setShow(false);
+  };
+
+  const showNextPhoto = () => {
+    setCurrentPhotoIndex(currentPhotoIndex => ((currentPhotoIndex + 1) % photos.length));
+  };
+  const showPreviousPhoto = () => {
+    setCurrentPhotoIndex(currentPhotoIndex => ((currentPhotoIndex - 1 + photos.length) % photos.length));
+  };
+  return {
+    modalPhoto: {
+      show,
+      open,
+      close
+    },
+    showNextPhoto,
+    showPreviousPhoto,
+    currentPhotoIndex
+  };
+};
 
 const Photos = () => {
-  const [index, setIndex] = useState(-1);
 
   const {albumId} = useParams();
   const photos = useSelector(state => state.photos[albumId]) ?? [];
-
   const dispatch = useDispatch();
-  const photosLength = photos.length;
-  useEffect(() => {
-    if (!photosLength) {
-      dispatch(fetchPhotosByAlbumId(albumId))
-    }
-  }, [albumId, dispatch, photosLength])
 
-  const loading = useSelector(state => state.photosLoading);
+  useEffect(() => {
+    dispatch(fetchPhotosByAlbumId(albumId))
+  }, [albumId, dispatch])
+
+  const loading = useSelector(state => state.isLoadingPhotos);
+  const {
+    modalPhoto,
+    currentPhotoIndex,
+    showNextPhoto,
+    showPreviousPhoto
+  } = useModalPhoto(photos);
 
   return (
     <div className="row">
@@ -32,19 +66,19 @@ const Photos = () => {
               <div key={photo.id} className="col-3 mt-4">
                 <Photo
                   photo={photo}
-                  onClick={() => setIndex(index)}
+                  onClick={() => modalPhoto.open(index)}
                 />
               </div>
             )
           })
       }
       {
-        photos[index]
+        modalPhoto.show
         && <ModalPhoto
-          photo={photos[index]}
-          closeAction={() => setIndex(-1)}
-          next={() => setIndex((index + 1) % photosLength)}
-          previous={() => setIndex((index - 1 + photosLength) % photosLength)}
+          photo={photos[currentPhotoIndex]}
+          closeAction={modalPhoto.close}
+          next={showNextPhoto}
+          previous={showPreviousPhoto}
         />
       }
     </div>
