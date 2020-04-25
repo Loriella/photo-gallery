@@ -7,7 +7,7 @@ import Albums from "./components/Albums/Albums";
 import Photos from "./components/Photos/Photos";
 
 const App = () => (
-  <BrowserRouter>
+  <BrowserRouter basename="/photo-gallery">
     <div className="App">
       <Header/>
       <div className="container">
